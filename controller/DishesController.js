@@ -77,6 +77,13 @@ exports.postContact = async (req,resp,next)=>{
             throw validator.checkValidationError(req);
         }
         const phoneNumber = req.body.phone_num;
+        let existingContact = await contacts.findAll({ where:{phone_num:phoneNumber}});
+        if(existingContact.length !==0){
+            const error = new Error(" The provided contact number is already registered!!");
+            error.status=StatusCodes.CONFLICT;
+            error.error=" Please provide a valid contact number";
+            throw error;
+        }
         const contact = new contacts({
             phone_num: phoneNumber
         });

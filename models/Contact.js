@@ -9,7 +9,7 @@ const Contacts = sequelize.define('contacts',{
         primaryKey:true
     },
     phone_num:{
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false
     }
 });
