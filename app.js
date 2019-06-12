@@ -1,5 +1,6 @@
 const express = require('express');
 const specialDishes = require('./models/SpecialDishes');
+const contacts = require('./models/Contact');
 const bodyParser = require('body-parser');
 const dishRoutes = require('./routes/DishesRoutes');
 

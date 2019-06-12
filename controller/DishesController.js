@@ -1,5 +1,7 @@
 const specialDish = require('../models/SpecialDishes');
 const StatusCodes = require('../utils/StatusCodes');
+const  contacts = require('../models/Contact');
+const validator = require('../utils/Validator');
 
 exports.postDish = async (req, resp, next) => {
     try {
@@ -67,4 +69,45 @@ exports.deleteDish = async (req, resp, next) => {
     } catch (err) {
         next(err);
     }
+};
+
+exports.postContact = async (req,resp,next)=>{
+    try{
+        if(validator.checkValidationError(req)){
+            throw validator.checkValidationError(req);
+        }
+        const phoneNumber = req.body.phone_num;
+        const contact = new contacts({
+            phone_num: phoneNumber
+        });
+        let result = await contact.save();
+        resp.json({
+            status_code:StatusCodes.OK,
+            message:"Contact number posted successfully!!",
+            data:result
+        });
+    }
+    catch(err){
+        next(err);
+    }
+};
+
+exports.getContacts = async (req,resp,next)=>{
+        try{
+            let fetchedContacts = await contacts.findAll({attributes:['id','phone_num']});
+            if(fetchedContacts.length === 0){
+                const error =  new Error(" No contacts found !!");
+                error.status= StatusCodes.NO_CONTENT;
+                error.error=" No contacts to display!";
+                throw error;
+            }
+            resp.json({
+                status_code:StatusCodes.OK,
+                message:"Contacts fetched successfully!!",
+                contacts:fetchedContacts
+            });
+        }
+        catch (err) {
+            next(err);
+        }
 };
